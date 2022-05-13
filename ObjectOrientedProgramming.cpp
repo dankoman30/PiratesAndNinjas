@@ -10,12 +10,6 @@ using namespace std;
 
 class GameStructure {
 public:
-    int RandomRoll() {
-        srand((unsigned)time(0));
-        int randomNumber;
-        randomNumber = (rand() % 100) + 1;
-        return randomNumber;
-    }
     virtual void Help() {}
 };
 
@@ -27,18 +21,22 @@ public:
     int getHealth() {
         return Health;
     }
-    void setHealth(int hitPoints) {
-        Health -= hitPoints; // subtract hitPoints from Health
-        if (Health < 0) { // character is dead
+    void setHealth(int health) {
+        Health = health;
+        if (Health <= 0) { // character is dead
             Health = 0;
-            cout << "Character has Expired..." << endl;
+            cout << Name << " has Expired..." << endl;
         }
     }
+    void defend(int hitPoints) {
+        int newHealth = getHealth() - hitPoints; // what will the health be after attack?
+        setHealth(newHealth); // set the new health
+    }
     void Talk(string stuffToSay) {
-        cout << stuffToSay << endl;
+        cout << endl << stuffToSay << endl << endl;
     }
     void Talk(string name, string stuffToSay) {
-        cout << "I'm " << name << ", and " << stuffToSay << endl;
+        cout << endl << "I'm " << name << ", and " << stuffToSay << endl << endl;
     }
     virtual int Attack() {
         return 10; // attack returns 10 hit points
@@ -49,12 +47,13 @@ public:
 class Ninja : public Character {
 public:
     void ThrowStars() {
-        cout << "I am throwing stars!" << endl;
+        Talk(Name, "I am throwing stars!");
     }
     Ninja(string N) { // constructor
         Name = N;
     }
     int Attack() {
+        ThrowStars(); // throw some stars
         return 25; // overrride superclass method
     }
     void Help() {
@@ -66,12 +65,13 @@ public:
 class Pirate : public Character {
 public:
     void UseSword() {
-        cout << "I am Swooshing my Sword!" << endl;
+        Talk(Name, "I am Swooshing my Sword!");
     }
     Pirate(string N) { // constructor
         Name = N;
     }
     int Attack() {
+        UseSword(); // use the sword
         return 25; // overrride superclass method
     }
     void Help() {
@@ -83,29 +83,64 @@ void intro() {
     // intro stuff here
 }
 
+int RandomRoll() {
+    srand((unsigned)time(0));
+    int randomNumber;
+    randomNumber = (rand() % 100) + 1;
+    return randomNumber;
+}
+
 int main()
 {
     intro();
     int choice;
-    GameStructure game;
+    Pirate pirate("Smee"); // instantiate pirate object
+    Ninja ninja("Bruce"); // instantiate ninja object
+
     for (;;) { // main loop
-        cout << "1. Something" << endl << "2. Something else" << endl << "3. RandomRoll" << endl << "9. EXIT" << endl;
+        int attackHP;
+        cout << "1. Ninja attacks Pirate" << endl << "2. Pirate attacks Ninja" << endl << "3. Display character health" << endl << "4. Reset character health to full" << endl;
+        cout << "5. Ninja attacks Pirate with random HP" << endl << "6. Pirate attacks Ninja with random HP" << endl << "9. EXIT" << endl;
         cout << "enter a choice" << endl;
         cin >> choice;
 
         switch (choice) {
-            case 1:
-                cout << "do stuff" << endl;
+            case 1: // ninja attacks
+                attackHP = ninja.Attack();
+                cout << endl << ninja.Name << " ATTACKS " << pirate.Name << " FOR " << attackHP << " hitpoints!" << endl << endl;
+                pirate.defend(attackHP); // subtract ninja's attack from pirate's health
                 continue; // repeat loop from beginning
-            case 2:
-                cout << "do other stuff" << endl;
+            case 2: // pirate attacks
+                attackHP = pirate.Attack();
+                cout << endl << pirate.Name << " ATTACKS " << ninja.Name << " FOR " << attackHP << " hitpoints!" << endl << endl;
+                ninja.defend(attackHP);
                 continue; // repeat loop from beginning
-            case 3:
-                cout << "YOU ROLLED A " << game.RandomRoll() << endl;
+            case 3: // display character health
+                cout << endl << "CURRENT HEALTH:" << endl << "===============" << endl;
+                cout << pirate.Name << ": " << pirate.getHealth() << endl;
+                cout << ninja.Name << ": " << ninja.getHealth() << endl;
+                cout << "===============" << endl << endl;
+                continue;
+            case 4: // reset everyone's health to full
+                pirate.setHealth(100);
+                ninja.setHealth(100);
+                cout << "FULL HEALTH FOR ALL!" << endl << endl;
+                continue;
+            case 5: // ninja attacks pirate random
+                attackHP = RandomRoll();
+                pirate.defend(attackHP);
+                ninja.Talk(ninja.Name, "you've dishonored me, so NOW I MUST ATTACK YOU EXTRA HARD TO RESTORE KARMIC BALANCE!");
+                cout << endl << ninja.Name << " ATTACKS " << pirate.Name << " FOR " << attackHP << " hitpoints!" << endl << endl;
+                continue;
+            case 6: // pirate attacks ninja random
+                attackHP = RandomRoll();
+                ninja.defend(attackHP);
+                pirate.Talk(pirate.Name, "YOU'LL WALK THE PLANK FOR THAT, ya SCALLYWAG! YARRRRR!!!");
+                cout << endl << pirate.Name << " ATTACKS " << ninja.Name << " FOR " << attackHP << " hitpoints!" << endl << endl;
                 continue;
             case 9:
+                cout << endl << "BYE! THANKS FOR PLAYING!" << endl;
                 break; // exit switch
-
         }
         break;
     }
