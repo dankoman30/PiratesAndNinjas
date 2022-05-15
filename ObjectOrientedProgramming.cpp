@@ -18,13 +18,13 @@ private:
     int Health = 100; // start health at 100, this property is private
 public:
     string Name;
-    int getHealth() {
+    int getHealth() { // health getter method
         return Health;
     }
-    void setHealth(int health) {
+    void setHealth(int health) { // health setter method
         Health = health;
-        if (Health <= 0) { // character is dead
-            Health = 0;
+        if (Health <= 0) { // character is dead if health is less than or equal to zero
+            Health = 0; // in case health is less than zero, reset it to zero
             cout << Name << " has Expired..." << endl;
         }
     }
@@ -32,16 +32,16 @@ public:
         int newHealth = getHealth() - hitPoints; // what will the health be after attack?
         setHealth(newHealth); // set the new health
     }
-    void Talk(string stuffToSay) {
+    void Talk(string stuffToSay) { // method for character to speak
         cout << endl << stuffToSay << endl << endl;
     }
-    void Talk(string name, string stuffToSay) {
+    void Talk(string name, string stuffToSay) { // another method for character to speak, but allows name to be passed in as well
         cout << endl << "I'm " << name << ", and " << stuffToSay << endl << endl;
     }
-    virtual int Attack() {
+    virtual int Attack() { // default attack method for character results in 10 hit points
         return 10; // attack returns 10 hit points
     }
-    void Help() {}
+    void Help() {} // overriding help method
 };
 
 class Ninja : public Character {
@@ -100,11 +100,11 @@ string CharacterName(string charType) { // method for retrieving string from use
 
 int main()
 {
-    intro();
-    int choice;
+    intro(); // call intro method
+    int choice; // declare choice, for use later
 
-    string pirateName = CharacterName("PIRATE");
-    string ninjaName = CharacterName("NINJA");
+    string pirateName = CharacterName("PIRATE"); // get pirate name from user
+    string ninjaName = CharacterName("NINJA"); // get ninja name from user
 
     Pirate pirate(pirateName); // instantiate pirate object
     Ninja ninja(ninjaName); // instantiate ninja object
@@ -141,7 +141,7 @@ int main()
             case 5: // ninja attacks pirate random
                 attackHP = RandomRoll(); // define attackHP
                 pirate.defend(attackHP); // subtract ninja's attack from pirate's health
-                ninja.Talk(ninja.Name, "you've dishonored me, so NOW I MUST ATTACK YOU EXTRA HARD TO RESTORE KARMIC BALANCE!");
+                ninja.Talk(ninja.Name, "you've dishonored me, so NOW I MUST ATTACK YOU EXTRA HARD TO RESTORE KARMIC BALANCE TO THE UNIVERSE!");
                 cout << endl << ninja.Name << " ATTACKS " << pirate.Name << " FOR " << attackHP << " hitpoints!" << endl << endl;
                 continue;
             case 6: // pirate attacks ninja random
@@ -150,11 +150,11 @@ int main()
                 pirate.Talk(pirate.Name, "YOU'LL WALK THE PLANK FOR THAT, ya SCALLYWAG! YARRRRR!!!");
                 cout << endl << pirate.Name << " ATTACKS " << ninja.Name << " FOR " << attackHP << " hitpoints!" << endl << endl;
                 continue;
-            case 8:
+            case 8: // help
                 pirate.Help();
                 ninja.Help();
                 continue;
-            case 9:
+            case 9: // end game sequence
                 cout << endl << endl;
                 if (pirate.getHealth() > ninja.getHealth()) { // pirate wins
                     cout << pirate.Name << " the pirate has won the game!";
