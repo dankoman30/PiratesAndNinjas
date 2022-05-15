@@ -14,17 +14,17 @@ void intro() {
     cout << "Hi, welcome to PIRATES & NINJAS!!!" << endl << "In this game, a pirate and a ninja fight the ultimate battle to the death!" << endl;
 }
 
-int RandomRoll() {
+int RandomRoll() { // function for retrieving a random integer between 0 and 101
     srand((unsigned)time(0));
     int randomNumber;
-    randomNumber = (rand() % 100) + 1;
+    randomNumber = (rand() % 100) + 1; // use modulus operator to set maximum number to 100
     return randomNumber;
 }
 
 string CharacterName(string charType) { // method for retrieving string from user for character name
     string enteredName;
     cout << endl << "enter a name for " << charType << endl;
-    cin >> enteredName;
+    cin >> enteredName; // get text from user
     return enteredName;
 }
 
