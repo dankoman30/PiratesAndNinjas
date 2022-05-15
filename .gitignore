@@ -1,4 +1,3 @@
 x64/*
-ObjectOrientedProgramming.vcxproj
-ObjectOrientedProgramming.vcxproj.filters
-ObjectOrientedProgramming.vcxproj.user
+.vs/*
+*vcxproj*
