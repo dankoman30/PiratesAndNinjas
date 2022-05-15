@@ -5,79 +5,9 @@
 #include <cstdlib>
 #include <ctime>
 #include <string>
+#include "add.h"
 
 using namespace std; // save us some typing
-
-class GameStructure { // create root class
-public:
-    virtual void Help() {} // virtual empty method
-};
-
-class Character: public GameStructure { // create character class, inheriting from gamestructure
-private:
-    int Health = 100; // start health at 100, this property is private
-public:
-    string Name;
-    int getHealth() { // health getter method
-        return Health;
-    }
-    void setHealth(int health) { // health setter method
-        Health = health;
-        if (Health <= 0) { // character is dead if health is less than or equal to zero
-            Health = 0; // in case health is less than zero, reset it to zero
-            cout << Name << " has Expired..." << endl;
-        }
-    }
-    void defend(int hitPoints) {
-        int newHealth = getHealth() - hitPoints; // what will the health be after attack?
-        setHealth(newHealth); // set the new health
-    }
-    void Talk(string stuffToSay) { // method for character to speak
-        cout << endl << stuffToSay << endl << endl;
-    }
-    void Talk(string name, string stuffToSay) { // another method for character to speak, but allows name to be passed in as well
-        cout << endl << "I'm " << name << ", and " << stuffToSay << endl << endl;
-    }
-    virtual int Attack() { // default attack method for character results in 10 hit points
-        return 10; // attack returns 10 hit points
-    }
-    void Help() {} // overriding help method
-};
-
-class Ninja : public Character {
-public:
-    void ThrowStars() {
-        Talk(Name, "I am throwing stars!");
-    }
-    Ninja(string N) { // constructor
-        Name = N;
-    }
-    int Attack() {
-        ThrowStars(); // throw some stars
-        return 25; // overrride superclass method
-    }
-    void Help() {
-        cout << endl << "Ninjas are quiet and swift; you can use them to throw stars!" << endl << endl;
-    }
-
-};
-
-class Pirate : public Character {
-public:
-    void UseSword() {
-        Talk(Name, "I am Swooshing my Sword!");
-    }
-    Pirate(string N) { // constructor
-        Name = N;
-    }
-    int Attack() {
-        UseSword(); // use the sword
-        return 25; // overrride superclass method
-    }
-    void Help() {
-        cout << endl << "Pirates are loud and forceful; you can use them to attack with swords!" << endl << endl;
-    }
-};
 
 void intro() {
     // intro stuff here
@@ -102,12 +32,13 @@ int main()
 {
     intro(); // call intro method
     int choice; // declare choice, for use later
+    int startingHealth = 100; // what should the starting health of each player be?
 
     string pirateName = CharacterName("PIRATE"); // get pirate name from user
     string ninjaName = CharacterName("NINJA"); // get ninja name from user
 
-    Pirate pirate(pirateName); // instantiate pirate object
-    Ninja ninja(ninjaName); // instantiate ninja object
+    Pirate pirate(pirateName, startingHealth); // instantiate pirate object with name and starting health
+    Ninja ninja(ninjaName, startingHealth); // instantiate ninja object with name and starting health
 
     for (;;) { // main loop
         int attackHP; // declare attackHP for use later
