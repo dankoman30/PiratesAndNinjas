@@ -8,14 +8,14 @@
 
 using namespace std; // save us some typing
 
-class GameStructure {
+class GameStructure { // create root class
 public:
     virtual void Help() {} // virtual empty method
 };
 
-class Character: public GameStructure {
+class Character: public GameStructure { // create character class, inheriting from gamestructure
 private:
-    int Health = 100; // start health at 100
+    int Health = 100; // start health at 100, this property is private
 public:
     string Name;
     int getHealth() {
@@ -57,7 +57,7 @@ public:
         return 25; // overrride superclass method
     }
     void Help() {
-        cout << endl << "Ninjas are quiet and swift; you can use them to throw stars!" << endl;
+        cout << endl << "Ninjas are quiet and swift; you can use them to throw stars!" << endl << endl;
     }
 
 };
@@ -75,12 +75,13 @@ public:
         return 25; // overrride superclass method
     }
     void Help() {
-        cout << endl << "Pirates are loud and forceful; you can use them to attack with swords!" << endl;
+        cout << endl << "Pirates are loud and forceful; you can use them to attack with swords!" << endl << endl;
     }
 };
 
 void intro() {
     // intro stuff here
+    cout << "Hi, welcome to PIRATES & NINJAS!!!" << endl << "In this game, a pirate and a ninja fight the ultimate battle to the death!" << endl;
 }
 
 int RandomRoll() {
@@ -90,17 +91,28 @@ int RandomRoll() {
     return randomNumber;
 }
 
+string CharacterName(string charType) { // method for retrieving string from user for character name
+    string enteredName;
+    cout << endl << "enter a name for " << charType << endl;
+    cin >> enteredName;
+    return enteredName;
+}
+
 int main()
 {
     intro();
     int choice;
-    Pirate pirate("Smee"); // instantiate pirate object
-    Ninja ninja("Bruce"); // instantiate ninja object
+
+    string pirateName = CharacterName("PIRATE");
+    string ninjaName = CharacterName("NINJA");
+
+    Pirate pirate(pirateName); // instantiate pirate object
+    Ninja ninja(ninjaName); // instantiate ninja object
 
     for (;;) { // main loop
         int attackHP; // declare attackHP for use later
         cout << "1. Ninja attacks Pirate" << endl << "2. Pirate attacks Ninja" << endl << "3. Display character health" << endl << "4. Reset character health to full" << endl; // display menu options
-        cout << "5. Ninja attacks Pirate with random HP" << endl << "6. Pirate attacks Ninja with random HP" << endl << "9. EXIT" << endl; // display more menu options
+        cout << "5. Ninja attacks Pirate with random HP" << endl << "6. Pirate attacks Ninja with random HP" << endl << "8. Help" << endl <<"9. EXIT" << endl; // display more menu options
         cout << "enter a choice: "; // instruct user to make a choice
         cin >> choice; // take user input
 
@@ -143,7 +155,17 @@ int main()
                 ninja.Help();
                 continue;
             case 9:
-                cout << endl << "BYE! THANKS FOR PLAYING!" << endl; // exit game
+                cout << endl << endl;
+                if (pirate.getHealth() > ninja.getHealth()) { // pirate wins
+                    cout << pirate.Name << " the pirate has won the game!";
+                }
+                else if (ninja.getHealth() > pirate.getHealth()) { // ninja wins
+                    cout << ninja.Name << " the ninja has won the game!";
+                }
+                else { // tie game
+                    cout << pirate.Name << " and " << ninja.Name << " have tied.  There is no clear winner.";
+                }
+                cout << endl << "BYE! THANKS FOR PLAYING!" << endl;
                 break; // exit switch
         }
         break;
